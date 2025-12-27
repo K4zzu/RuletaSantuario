@@ -181,6 +181,7 @@
     const winnerNameEl = document.getElementById('winnerName');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const loadXlsxBtn = document.getElementById('loadXlsxBtn');
+    const spinAudio = new Audio('ruleta.m4a');
 
     let participants = [];
     let spinning = false;
@@ -374,6 +375,8 @@
       }
 
       spinning = true;
+      spinAudio.currentTime = 0;
+      spinAudio.play().catch(() => {});
       wheelGraphic.style.transform = `rotate(${target}deg)`;
 
       setTimeout(() => {
