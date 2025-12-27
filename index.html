@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ruleta | Café Santuario</title>
+  <title>Ruleta | Cafe Santuario</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -27,11 +27,7 @@
       background: radial-gradient(circle at 20% 20%, #1f130c, #0c0806 50%), radial-gradient(circle at 80% 0%, #1a120e, transparent 35%), #0b0604;
       padding: 24px;
     }
-    a { color: inherit; }
-    .page {
-      max-width: 1300px;
-      margin: 0 auto;
-    }
+    .page { max-width: 1100px; margin: 0 auto; }
     .topbar {
       display: flex;
       align-items: center;
@@ -44,58 +40,10 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(6px);
     }
-    .brand {
-      font-family: 'Playfair Display', serif;
-      letter-spacing: 0.8px;
-      font-size: 20px;
-      color: var(--accent-strong);
-    }
-    .title {
-      font-size: 16px;
-      color: var(--muted);
-    }
-    .mode-buttons {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    button {
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
-    }
-    .pill {
-      background: var(--accent);
-      color: #1a110d;
-      padding: 10px 14px;
-      border-radius: 999px;
-      box-shadow: 0 10px 30px rgba(214,163,87,0.25);
-    }
-    .ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px dashed rgba(255,255,255,0.12);
-      padding: 8px 12px;
-      border-radius: 10px;
-    }
-    button:active { transform: translateY(1px) scale(0.99); }
-    button:hover { box-shadow: 0 16px 30px rgba(0,0,0,0.25); }
+    .brand { font-family: 'Playfair Display', serif; letter-spacing: 0.8px; font-size: 20px; color: var(--accent-strong); }
+    .title { font-size: 16px; color: var(--muted); }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-    }
-    @media (max-width: 1100px) {
-      .layout { grid-template-columns: 1fr; }
-      body { padding: 16px; }
-    }
-    body.presentation .layout {
-      grid-template-columns: 1fr;
-      justify-items: center;
-    }
+    .layout { display: grid; grid-template-columns: 1fr; gap: 20px; justify-items: center; }
 
     .card {
       background: linear-gradient(180deg, #1b120c, #130c08);
@@ -103,22 +51,11 @@
       border-radius: 18px;
       padding: 18px;
       box-shadow: var(--shadow);
+      width: 100%;
     }
 
-    .wheel-card {
-      position: relative;
-      overflow: hidden;
-    }
-    body.presentation .wheel-card {
-      width: min(100%, 760px);
-      margin: 0 auto;
-    }
-    .wheel-wrap {
-      position: relative;
-      display: grid;
-      place-items: center;
-      padding: 10px 10px 20px;
-    }
+    .wheel-card { position: relative; overflow: hidden; }
+    .wheel-wrap { position: relative; display: grid; place-items: center; padding: 10px 10px 20px; }
     .wheel-graphic {
       width: min(70vw, 520px);
       height: min(70vw, 520px);
@@ -130,280 +67,39 @@
       display: grid;
       place-items: center;
       position: relative;
-      transition: transform 4s cubic-bezier(.14,.72,.24,1);
-      box-shadow:
-        0 30px 80px rgba(0,0,0,0.45),
-        inset 0 0 25px rgba(0,0,0,0.25),
-        0 0 0 1px rgba(255,255,255,0.03);
+      transition: transform 5s cubic-bezier(.17,.67,.08,1);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 0 25px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
     }
     canvas { width: 100%; height: 100%; }
-    .pointer {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 18px solid transparent;
-      border-right: 18px solid transparent;
-      border-bottom: 26px solid var(--accent-strong);
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-      z-index: 3;
-    }
-    .center-cap {
-      position: absolute;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), rgba(0,0,0,0.55));
-      border: 6px solid rgba(255,255,255,0.08);
-      display: grid;
-      place-items: center;
-      color: var(--accent);
-      font-family: 'Playfair Display', serif;
-      letter-spacing: 0.5px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .controls-inline {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    .primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #1b120d;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 15px;
-      min-width: 140px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-    .primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .status {
-      margin-top: 14px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      color: var(--muted);
-      font-size: 14px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .status strong { color: var(--accent-strong); }
+    .pointer { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 26px solid var(--accent-strong); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); z-index: 3; }
+    .center-cap { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), rgba(0,0,0,0.55)); border: 6px solid rgba(255,255,255,0.08); display: grid; place-items: center; color: var(--accent); font-family: 'Playfair Display', serif; letter-spacing: 0.5px; z-index: 2; pointer-events: none; }
 
-    .control-panel {
-      display: grid;
-      gap: 14px;
-      grid-template-rows: auto 1fr auto;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .control-panel.hidden {
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      position: absolute;
-      width: calc(100% - 36px);
-    }
-    .panel-header h3 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: 0.3px;
-    }
-    .panel-header p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.2px;
-    }
-    textarea, input[type="text"], input[type="number"] {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 10px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.2s ease, box-shadow 0.2s ease;
-    }
-    textarea:focus, input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(214,163,87,0.15);
-    }
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-    .list {
-      max-height: 320px;
-      overflow: auto;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.03);
-      padding: 8px;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 8px;
-      padding: 8px;
-      border-radius: 10px;
-      background: rgba(0,0,0,0.18);
-      margin-bottom: 8px;
-      border: 1px solid rgba(255,255,255,0.03);
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .chip .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-    .delete {
-      background: rgba(239,100,97,0.12);
-      color: #ffb3b2;
-      border-radius: 10px;
-      padding: 8px 10px;
-    }
-    .row input[type="number"] {
-      width: 100%;
-    }
-    .footnote {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.1px;
-    }
-    .winner {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 6px;
-      font-size: 16px;
-      letter-spacing: 0.2px;
-      color: var(--accent-strong);
-    }
-    .winner span {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-    }
-    .badge {
-      background: rgba(48,176,163,0.18);
-      color: #7be3d9;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 12px;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-    .controls-cta {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .hide-in-presentation {
-      display: none;
-    }
-    body.presentation .control-panel { display: none; }
-    body.presentation .topbar .mode-buttons { opacity: 1; }
-    .toast {
-      position: fixed;
-      right: 16px;
-      top: 16px;
-      padding: 12px 14px;
-      background: rgba(0,0,0,0.75);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      opacity: 0;
-      transform: translateY(-8px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      z-index: 9;
-      pointer-events: none;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      display: grid;
-      place-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      z-index: 10;
-    }
-    .modal-backdrop.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal {
-      background: linear-gradient(180deg, #1b120c, #110a07);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 28px 32px;
-      box-shadow: 0 40px 120px rgba(0,0,0,0.55);
-      max-width: 640px;
-      width: min(90vw, 700px);
-      text-align: center;
-    }
-    .modal h2 {
-      margin: 0 0 10px;
-      font-family: 'Playfair Display', serif;
-      font-size: 36px;
-      letter-spacing: 0.6px;
-      color: var(--accent-strong);
-    }
-    .modal .winner-name {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(36px, 6vw, 58px);
-      margin: 6px 0 16px;
-      color: var(--text);
-    }
-    .modal .subtext {
-      color: var(--muted);
-      letter-spacing: 0.2px;
-      margin-bottom: 18px;
-    }
-    .modal button {
-      margin-top: 10px;
-    }
+    .controls-inline { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    button { border: none; cursor: pointer; font-weight: 600; letter-spacing: 0.2px; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease; }
+    .primary { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); color: #1b120d; padding: 12px 18px; border-radius: 12px; font-size: 15px; min-width: 140px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .ghost { background: transparent; color: var(--muted); border: 1px dashed rgba(255,255,255,0.12); padding: 10px 14px; border-radius: 10px; }
+    .badge { background: rgba(48,176,163,0.18); color: #7be3d9; padding: 4px 8px; border-radius: 8px; font-size: 12px; letter-spacing: 0.4px; text-transform: uppercase; }
+    .status { margin-top: 14px; padding: 12px 14px; background: rgba(255,255,255,0.05); border-radius: 12px; color: var(--muted); font-size: 14px; border: 1px solid rgba(255,255,255,0.05); }
+
+    .list { max-height: 320px; overflow: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.03); padding: 8px; margin-top: 12px; }
+    .row { display: grid; grid-template-columns: 1fr; align-items: center; gap: 6px; padding: 8px; border-radius: 10px; background: rgba(0,0,0,0.18); margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); }
+
+    .winner { display: inline-flex; align-items: baseline; gap: 6px; font-size: 16px; letter-spacing: 0.2px; color: var(--accent-strong); }
+    .winner span { font-family: 'Playfair Display', serif; font-size: 22px; }
+
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: grid; place-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 10; }
+    .modal-backdrop.show { opacity: 1; pointer-events: auto; }
+    .modal { background: linear-gradient(180deg, #1b120c, #110a07); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 28px 32px; box-shadow: 0 40px 120px rgba(0,0,0,0.55); max-width: 640px; width: min(90vw, 700px); text-align: center; }
+    .modal h2 { margin: 0 0 10px; font-family: 'Playfair Display', serif; font-size: 36px; letter-spacing: 0.6px; color: var(--accent-strong); }
+    .modal .winner-name { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 58px); margin: 6px 0 16px; color: var(--text); }
+    .modal .subtext { color: var(--muted); letter-spacing: 0.2px; margin-bottom: 18px; }
   </style>
 </head>
 <body>
   <div class="page">
     <header class="topbar card">
-      <div class="brand">Café Santuario</div>
-      <div class="title">Ruleta de premiación</div>
-      <div class="mode-buttons">
-        <button class="ghost ghost-toggle" id="hideControlsBtn" title="Oculta la edición para proyectar">Ocultar panel</button>
-      </div>
+      <div class="brand">Cafe Santuario</div>
+      <div class="title">Ruleta de premiacion</div>
     </header>
 
     <main class="layout">
@@ -412,56 +108,34 @@
           <div class="pointer"></div>
           <div class="wheel-graphic" id="wheelGraphic">
             <canvas id="wheel" width="600" height="600"></canvas>
-            <div class="center-cap">Café</div>
+            <div class="center-cap">Cafe</div>
           </div>
         </div>
         <div class="controls-inline">
           <button class="primary" id="spinBtn">Girar ruleta</button>
-          <button class="ghost" id="shuffleBtn">Repartir porcentajes</button>
+          <button class="ghost" id="loadXlsxBtn">Recargar XLSX</button>
           <div class="badge" id="totalSlots">Participantes: 0</div>
         </div>
         <div class="status" id="status">
-          Añade participantes y define su porcentaje para iniciar el sorteo.
+          Carga participantes desde el Excel o presiona Recargar XLSX.
         </div>
+        <div class="list" id="list"></div>
       </section>
-
-      <aside class="card control-panel" id="controlPanel">
-        <div class="panel-header">
-          <h3>Participantes (desde Excel)</h3>
-          <p>Se cargan desde <code>participantes.xlsx</code>. El ganador se define en el código.</p>
-        </div>
-        <div class="fields">
-          <label for="namesInput">Nombres nuevos (uno por línea)</label>
-          <textarea id="namesInput" placeholder="Ej:&#10;Valeria&#10;Luis&#10;Equipo barismo"></textarea>
-          <div class="controls-cta">
-            <button class="pill" id="addNamesBtn">Agregar a la ruleta</button>
-            <button class="ghost" id="clearBtn">Limpiar lista</button>
-            <button class="ghost" id="loadXlsxBtn">Recargar XLSX</button>
-          </div>
-        </div>
-        <div class="list" id="list">
-          <!-- participant rows -->
-        </div>
-        <div class="footnote">
-          <strong>Tip:</strong> usa el bot?n "Ocultar panel" de la barra superior antes de proyectar.
-        </div>
-      </aside>
     </main>
   </div>
 
-  <div class="toast" id="toast">Controles ocultos. Pulsa el bot?n para mostrarlos.</div>
   <div class="modal-backdrop" id="winnerModal">
     <div class="modal">
-      <h2>¡Ganador!</h2>
+      <h2>�Ganador!</h2>
       <div class="winner-name" id="winnerName">Nombre</div>
-      <div class="subtext">Felicidades, disfruta tu premio de Café Santuario.</div>
+      <div class="subtext">Felicidades, disfruta tu premio de Cafe Santuario.</div>
       <button class="primary" id="closeModalBtn">Cerrar</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
-    const XLSX_FILE = 'participantes.xlsx'; // coloca aquí el .xlsx en el mismo directorio
+    const XLSX_FILE = 'participantes.xlsx'; // coloca aqui el .xlsx en el mismo directorio
     const FORCED_WINNER_NAME = 'NOMBRE_DEL_GANADOR_AQUI'; // cambia este texto por el nombre exacto a forzar
     const palette = ['#d6a357', '#30b0a3', '#ef6461', '#7ac08c', '#f27f5f', '#8ea1ff', '#c17aff', '#5cdbc4'];
     const wheelCanvas = document.getElementById('wheel');
@@ -470,24 +144,14 @@
     const list = document.getElementById('list');
     const statusEl = document.getElementById('status');
     const totalSlots = document.getElementById('totalSlots');
-    const toast = document.getElementById('toast');
-    const controlPanel = document.getElementById('controlPanel');
-    const hideControlsBtn = document.getElementById('hideControlsBtn');
     const winnerModal = document.getElementById('winnerModal');
     const winnerNameEl = document.getElementById('winnerName');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const loadXlsxBtn = document.getElementById('loadXlsxBtn');
 
     let participants = [];
-
     let spinning = false;
     let currentRotation = 0;
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
-    }
 
     function showModal(name) {
       winnerNameEl.textContent = name || 'Ganador';
@@ -507,7 +171,13 @@
         const workbook = XLSX.read(data, { type: 'array' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-        const names = rows.reduce((acc, row) => acc.concat(row), []).map(n => String(n).trim()).filter(Boolean);
+        let nameCol = 0;
+        let startRow = 0;
+        for (let i = 0; i < rows.length; i++) {
+          const idx = rows[i].findIndex(cell => String(cell).trim().toLowerCase() === 'nombre del cliente');
+          if (idx !== -1) { nameCol = idx; startRow = i + 1; break; }
+        }
+        const names = rows.slice(startRow).map(row => String(row[nameCol] || '').trim()).filter(Boolean);
         participants = names.map(name => ({ name, weight: 1 }));
         renderList();
         statusEl.textContent = `Cargados ${names.length} participantes desde ${XLSX_FILE}.`;
@@ -535,7 +205,7 @@
         ctx.fillStyle = '#594634';
         ctx.textAlign = 'center';
         ctx.font = '20px "Space Grotesk"';
-        ctx.fillText('Agrega participantes y pesos', centerX, centerY);
+        ctx.fillText('Sin participantes cargados', centerX, centerY);
         return;
       }
 
@@ -555,7 +225,6 @@
         ctx.fill();
         ctx.stroke();
 
-        // Label
         ctx.save();
         ctx.translate(centerX, centerY);
         ctx.rotate(startAngle + slice / 2);
@@ -571,34 +240,12 @@
 
     function renderList() {
       list.innerHTML = '';
-
-      participants.forEach((p, idx) => {
+      participants.forEach((p) => {
         const row = document.createElement('div');
         row.className = 'row';
-
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.value = p.name;
-        nameInput.placeholder = 'Nombre';
-        nameInput.addEventListener('input', (e) => {
-          participants[idx].name = e.target.value;
-          drawWheel();
-        });
-
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'delete';
-        removeBtn.textContent = 'Eliminar';
-        removeBtn.addEventListener('click', () => {
-          participants.splice(idx, 1);
-          renderList();
-          drawWheel();
-        });
-
-        row.appendChild(nameInput);
-        row.appendChild(removeBtn);
+        row.textContent = p.name;
         list.appendChild(row);
       });
-
       totalSlots.textContent = `Participantes: ${participants.length}`;
       drawWheel();
     }
@@ -609,13 +256,13 @@
       const active = normalizedParticipants();
       const visible = displayParticipants();
       if (!visible.length) {
-        statusEl.textContent = 'No hay participantes visibles. Agrega nombres.';
+        statusEl.textContent = 'No hay participantes visibles. Carga el Excel.';
         return;
       }
       const forcedName = FORCED_WINNER_NAME.trim().toLowerCase();
       const forcedWinner = forcedName ? visible.find(p => p.name.trim().toLowerCase() === forcedName) : null;
       if (!active.length && !forcedWinner) {
-        statusEl.textContent = 'Todos los participantes tienen peso 0. Sube al menos uno o configura FORCED_WINNER_NAME.';
+        statusEl.textContent = 'Todos los participantes tienen peso 0. Configura FORCED_WINNER_NAME o pesos > 0.';
         return;
       }
       const total = active.reduce((sum, p) => sum + p.weight, 0);
@@ -625,7 +272,6 @@
         let rand = Math.random() * total;
         let cumulative = 0;
         active.forEach((p) => {
-          const sliceDeg = (p.weight / total) * 360;
           cumulative += p.weight;
           if (!winner && rand <= cumulative) {
             winner = p;
@@ -634,7 +280,7 @@
       }
 
       if (!winner) {
-        statusEl.textContent = 'No pudimos elegir ganador. Revisa los porcentajes.';
+        statusEl.textContent = 'No pudimos elegir ganador.';
         return;
       }
 
@@ -646,9 +292,9 @@
       const sliceDeg = 360 / visible.length;
       const winnerStart = displayIndex * sliceDeg;
       const landingAngle = winnerStart + Math.random() * sliceDeg;
-      const pointerAngle = 270 - landingAngle; // align pointer (top)
+      const pointerAngle = 270 - landingAngle;
       const baseExtraTurns = 5;
-      const randomExtra = Math.floor(Math.random() * 2); // +0 o +1 vuelta
+      const randomExtra = Math.floor(Math.random() * 2);
       const minDegrees = 360 * (baseExtraTurns + randomExtra);
       let target = pointerAngle;
       while (target - currentRotation < minDegrees) {
@@ -656,7 +302,6 @@
       }
 
       spinning = true;
-      wheelGraphic.style.transition = 'transform 5s cubic-bezier(.17,.67,.08,1)';
       wheelGraphic.style.transform = `rotate(${target}deg)`;
 
       setTimeout(() => {
@@ -667,53 +312,12 @@
       }, 5100);
     }
 
-    function addNames() {
-      const raw = document.getElementById('namesInput').value;
-      const names = raw.split(/\\n|,/).map(n => n.trim()).filter(Boolean);
-      names.forEach(name => participants.push({ name, weight: 1 }));
-      document.getElementById('namesInput').value = '';
-      renderList();
-    }
-
-    function shuffleWeights() {
-      if (!participants.length) return;
-      participants = participants.map(p => ({ ...p, weight: Math.floor(Math.random() * 90) + 10 }));
-      renderList();
-    }
-
-    function clearList() {
-      participants = [];
-      renderList();
-      statusEl.textContent = 'Lista limpia. Agrega nuevos nombres para volver a girar.';
-    }
-
-    function updateToggleButton() {
-      const hidden = document.body.classList.contains('presentation');
-      hideControlsBtn.textContent = hidden ? 'Mostrar panel' : 'Ocultar panel';
-      hideControlsBtn.title = hidden ? 'Mostrar controles de edición' : 'Ocultar controles de edición';
-    }
-
-    function togglePresentationMode(forceState) {
-      const enable = forceState !== undefined ? forceState : !document.body.classList.contains('presentation');
-      document.body.classList.toggle('presentation', enable);
-      if (enable) {
-        controlPanel.classList.add('hidden');
-        showToast('Panel oculto. Usa el bot?n para volver a mostrar.');
-      } else {
-        controlPanel.classList.remove('hidden');
-      }
-      updateToggleButton();
-    }
     document.getElementById('spinBtn').addEventListener('click', spinWheel);
-    document.getElementById('addNamesBtn').addEventListener('click', addNames);
-    document.getElementById('shuffleBtn').addEventListener('click', shuffleWeights);
-    document.getElementById('clearBtn').addEventListener('click', clearList);
     loadXlsxBtn.addEventListener('click', loadParticipantsFromXlsx);
-    hideControlsBtn.addEventListener('click', () => togglePresentationMode());
     closeModalBtn.addEventListener('click', hideModal);
     winnerModal.addEventListener('click', (e) => { if (e.target === winnerModal) hideModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideModal(); });
-    updateToggleButton();
+
     renderList();
     drawWheel();
     loadParticipantsFromXlsx();
