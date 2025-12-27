@@ -67,12 +67,40 @@
       display: grid;
       place-items: center;
       position: relative;
-      transition: transform 7s cubic-bezier(.17,.67,.08,1);
+      transition: transform 15s cubic-bezier(.2,.8,.1,1);
       box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 0 25px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
     }
     canvas { width: 100%; height: 100%; }
     .pointer { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 26px solid var(--accent-strong); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); z-index: 3; }
     .center-cap { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), rgba(0,0,0,0.55)); border: 6px solid rgba(255,255,255,0.08); display: grid; place-items: center; color: var(--accent); font-family: 'Playfair Display', serif; letter-spacing: 0.5px; z-index: 2; pointer-events: none; }
+    .prize-buttons {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+    .prize-buttons .stack {
+      display: grid;
+      gap: 8px;
+      pointer-events: auto;
+    }
+    .prize-btn {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+    .prize-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #1b120d;
+      box-shadow: 0 10px 30px rgba(214,163,87,0.3);
+    }
 
     .controls-inline { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
     button { border: none; cursor: pointer; font-weight: 600; letter-spacing: 0.2px; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease; }
@@ -83,6 +111,24 @@
 
     .list { max-height: 320px; overflow: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.03); padding: 8px; margin-top: 12px; }
     .row { display: grid; grid-template-columns: 1fr; align-items: center; gap: 6px; padding: 8px; border-radius: 10px; background: rgba(0,0,0,0.18); margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); }
+    .search-box {
+      margin-top: 12px;
+    }
+    .search-box input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-box input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(214,163,87,0.15);
+    }
 
     .winner { display: inline-flex; align-items: baseline; gap: 6px; font-size: 16px; letter-spacing: 0.2px; color: var(--accent-strong); }
     .winner span { font-family: 'Playfair Display', serif; font-size: 22px; }
@@ -109,6 +155,9 @@
           <div class="wheel-graphic" id="wheelGraphic">
             <canvas id="wheel" width="800" height="800"></canvas>
             <div class="center-cap">Cafe</div>
+            <div class="prize-buttons">
+              <div class="stack" id="prizeButtons"></div>
+            </div>
           </div>
         </div>
         <div class="controls-inline">
@@ -118,6 +167,9 @@
         </div>
         <div class="status" id="status">
           Carga participantes desde el Excel o presiona Recargar XLSX.
+        </div>
+        <div class="search-box">
+          <input id="searchInput" type="text" placeholder="Buscar participante por nombre...">
         </div>
         <div class="list" id="list"></div>
       </section>
@@ -136,13 +188,21 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
     const XLSX_FILE = 'participantes.xlsx'; // coloca aqui el .xlsx en el mismo directorio
-    const FORCED_WINNER_NAME = 'FELIO AVIRAMA'; // cambia este texto por el nombre exacto a forzar
+    const FORCED_WINNERS = [
+      { id: 'premio1', label: 'Premio Kit Foliar 1', name: 'HUGO PEREZ' },
+      { id: 'premio2', label: 'Premio Kit Foliar 2', name: 'FELIO AVIRAMA' },
+      { id: 'premio3', label: 'Premio Bomba De Fumigar 1', name: 'JOSE EDWIN PAJOY' },
+      { id: 'premio4', label: 'Premio Bomba De Fumigar 2', name: 'ALONSO PEREZ ZUÑIGA' },
+      { id: 'premio5', label: 'Premio Guadaña', name: 'HANS ORTEGA' },
+    ];
     const palette = ['#d6a357', '#30b0a3', '#ef6461', '#7ac08c', '#f27f5f', '#8ea1ff', '#c17aff', '#5cdbc4'];
     const wheelCanvas = document.getElementById('wheel');
     const ctx = wheelCanvas.getContext('2d');
     const wheelGraphic = document.getElementById('wheelGraphic');
+    const prizeButtonsEl = document.getElementById('prizeButtons');
     const list = document.getElementById('list');
     const statusEl = document.getElementById('status');
+    const searchInput = document.getElementById('searchInput');
     const totalSlots = document.getElementById('totalSlots');
     const winnerModal = document.getElementById('winnerModal');
     const winnerNameEl = document.getElementById('winnerName');
@@ -154,6 +214,8 @@
     let currentRotation = 0;
     let firstSpinDone = false;
     let colorOffset = Math.floor(Math.random() * palette.length);
+    let currentPrize = FORCED_WINNERS[0]?.id || null;
+    const prizeFirstSpin = {};
 
     function showModal(name) {
       winnerNameEl.textContent = name || 'Ganador';
@@ -198,7 +260,24 @@
       colorOffset = Math.floor(Math.random() * palette.length);
     }
 
+    function renderPrizeButtons() {
+      prizeButtonsEl.innerHTML = '';
+      FORCED_WINNERS.forEach(prize => {
+        const btn = document.createElement('button');
+        btn.className = 'prize-btn' + (prize.id === currentPrize ? ' active' : '');
+        btn.textContent = prize.label;
+        btn.addEventListener('click', () => {
+          currentPrize = prize.id;
+          prizeButtonsEl.querySelectorAll('.prize-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          statusEl.textContent = `Premio seleccionado: ${prize.label}`;
+        });
+        prizeButtonsEl.appendChild(btn);
+      });
+    }
+
     const displayParticipants = () => participants.filter(p => p.name.trim());
+    const matchesSearch = (name, term) => name.toLowerCase().includes(term.toLowerCase());
     function normalizedParticipants() {
       return participants.filter(p => p.name.trim() && p.weight > 0);
     }
@@ -254,13 +333,16 @@
 
     function renderList() {
       list.innerHTML = '';
-      participants.forEach((p) => {
+      const term = (searchInput.value || '').trim().toLowerCase();
+      const filtered = term ? participants.filter(p => matchesSearch(p.name, term)) : participants;
+
+      filtered.forEach((p) => {
         const row = document.createElement('div');
         row.className = 'row';
         row.textContent = p.name;
         list.appendChild(row);
       });
-      totalSlots.textContent = `Participantes: ${participants.length}`;
+      totalSlots.textContent = `Participantes: ${participants.length}${term ? ` | Coincidencias: ${filtered.length}` : ''}`;
       drawWheel();
     }
 
@@ -273,11 +355,12 @@
         statusEl.textContent = 'No hay participantes visibles. Carga el Excel.';
         return;
       }
-      const forcedName = FORCED_WINNER_NAME.trim().toLowerCase();
-      const shouldForce = !firstSpinDone && forcedName;
+      const prizeConfig = FORCED_WINNERS.find(p => p.id === currentPrize);
+      const forcedName = (prizeConfig?.name || '').trim().toLowerCase();
+      const shouldForce = !prizeFirstSpin[currentPrize] && forcedName;
       const forcedWinner = shouldForce ? visible.find(p => p.name.trim().toLowerCase() === forcedName) : null;
       if (!active.length && !forcedWinner) {
-        statusEl.textContent = 'Todos los participantes tienen peso 0. Configura FORCED_WINNER_NAME o pesos > 0.';
+        statusEl.textContent = 'Todos los participantes tienen peso 0. Configura un ganador forzado o pesos > 0.';
         return;
       }
       const total = active.reduce((sum, p) => sum + p.weight, 0);
@@ -298,7 +381,7 @@
         statusEl.textContent = 'No pudimos elegir ganador.';
         return;
       }
-      firstSpinDone = true;
+      if (currentPrize) prizeFirstSpin[currentPrize] = true;
 
       const displayIndex = visible.findIndex((p) => p === winner);
       if (displayIndex === -1) {
@@ -309,7 +392,7 @@
       const winnerStart = displayIndex * sliceDeg;
       const landingAngle = winnerStart + Math.random() * sliceDeg;
       const pointerAngle = 270 - landingAngle;
-      const baseExtraTurns = 7;
+      const baseExtraTurns = 12;
       const randomExtra = Math.floor(Math.random() * 3); // +0 a +2 vueltas
       const minDegrees = 360 * (baseExtraTurns + randomExtra);
       let target = pointerAngle;
@@ -325,7 +408,7 @@
         currentRotation = target;
         statusEl.innerHTML = `<div class="winner">Ganador: <span>${winner.name}</span></div>`;
         showModal(winner.name);
-      }, 7300);
+      }, 15300);
     }
 
     function randomizeOrientation() {
@@ -338,9 +421,11 @@
     closeModalBtn.addEventListener('click', hideModal);
     winnerModal.addEventListener('click', (e) => { if (e.target === winnerModal) hideModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideModal(); });
+    searchInput.addEventListener('input', renderList);
 
     renderList();
     drawWheel();
+    renderPrizeButtons();
     randomizeOrientation();
     loadParticipantsFromXlsx();
   </script>
