@@ -153,6 +153,7 @@
     let spinning = false;
     let currentRotation = 0;
     let firstSpinDone = false;
+    let colorOffset = Math.floor(Math.random() * palette.length);
 
     function showModal(name) {
       winnerNameEl.textContent = name || 'Ganador';
@@ -180,12 +181,21 @@
         }
         const names = rows.slice(startRow).map(row => String(row[nameCol] || '').trim()).filter(Boolean);
         participants = names.map(name => ({ name, weight: 1 }));
+        shuffleParticipantsOrder();
         renderList();
         statusEl.textContent = `Cargados ${names.length} participantes desde ${XLSX_FILE}.`;
       } catch (err) {
         console.error(err);
         statusEl.textContent = `Error cargando ${XLSX_FILE}. Ver consola.`;
       }
+    }
+
+    function shuffleParticipantsOrder() {
+      for (let i = participants.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [participants[i], participants[j]] = [participants[j], participants[i]];
+      }
+      colorOffset = Math.floor(Math.random() * palette.length);
     }
 
     const displayParticipants = () => participants.filter(p => p.name.trim());
@@ -220,7 +230,7 @@
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.closePath();
 
-        const fill = palette[idx % palette.length];
+        const fill = palette[(idx + colorOffset) % palette.length];
         ctx.fillStyle = fill;
         ctx.strokeStyle = 'rgba(0,0,0,0.35)';
         ctx.lineWidth = 2;
