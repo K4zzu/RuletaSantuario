@@ -99,7 +99,7 @@
   <div class="page">
     <header class="topbar card">
       <div class="brand">Cafe Santuario</div>
-      <div class="title">Ruleta de premiacion</div>
+      <div class="title">Ruleta de premiaci?n</div>
     </header>
 
     <main class="layout">
@@ -152,6 +152,7 @@
     let participants = [];
     let spinning = false;
     let currentRotation = 0;
+    let firstSpinDone = false;
 
     function showModal(name) {
       winnerNameEl.textContent = name || 'Ganador';
@@ -210,7 +211,7 @@
       }
 
       const slice = (Math.PI * 2) / visible.length;
-      const showLabels = visible.length <= 24;
+      const showLabels = visible.length <= 12;
       let startAngle = 0;
       visible.forEach((p, idx) => {
         const endAngle = startAngle + slice;
@@ -263,7 +264,8 @@
         return;
       }
       const forcedName = FORCED_WINNER_NAME.trim().toLowerCase();
-      const forcedWinner = forcedName ? visible.find(p => p.name.trim().toLowerCase() === forcedName) : null;
+      const shouldForce = !firstSpinDone && forcedName;
+      const forcedWinner = shouldForce ? visible.find(p => p.name.trim().toLowerCase() === forcedName) : null;
       if (!active.length && !forcedWinner) {
         statusEl.textContent = 'Todos los participantes tienen peso 0. Configura FORCED_WINNER_NAME o pesos > 0.';
         return;
@@ -286,6 +288,7 @@
         statusEl.textContent = 'No pudimos elegir ganador.';
         return;
       }
+      firstSpinDone = true;
 
       const displayIndex = visible.findIndex((p) => p === winner);
       if (displayIndex === -1) {
@@ -315,6 +318,11 @@
       }, 7300);
     }
 
+    function randomizeOrientation() {
+      currentRotation = Math.random() * 360;
+      wheelGraphic.style.transform = `rotate(${currentRotation}deg)`;
+    }
+
     document.getElementById('spinBtn').addEventListener('click', spinWheel);
     loadXlsxBtn.addEventListener('click', loadParticipantsFromXlsx);
     closeModalBtn.addEventListener('click', hideModal);
@@ -323,6 +331,7 @@
 
     renderList();
     drawWheel();
+    randomizeOrientation();
     loadParticipantsFromXlsx();
   </script>
 </body>
