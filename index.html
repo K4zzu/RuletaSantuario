@@ -57,10 +57,10 @@
     .wheel-card { position: relative; overflow: hidden; }
     .wheel-wrap { position: relative; display: grid; place-items: center; padding: 10px 10px 20px; }
     .wheel-graphic {
-      width: min(70vw, 520px);
-      height: min(70vw, 520px);
-      max-width: 520px;
-      max-height: 520px;
+      width: min(90vw, 720px);
+      height: min(90vw, 720px);
+      max-width: 720px;
+      max-height: 720px;
       border-radius: 50%;
       background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.08), rgba(0,0,0,0.35)), #0f0a07;
       border: 8px solid rgba(255,255,255,0.08);
@@ -98,8 +98,8 @@
 <body>
   <div class="page">
     <header class="topbar card">
-      <div class="brand">Cafe Santuario</div>
-      <div class="title">Ruleta de premiaci?n</div>
+      <div class="brand">Café Santuario</div>
+      <div class="title">Ruleta de premiación</div>
     </header>
 
     <main class="layout">
@@ -107,7 +107,7 @@
         <div class="wheel-wrap">
           <div class="pointer"></div>
           <div class="wheel-graphic" id="wheelGraphic">
-            <canvas id="wheel" width="600" height="600"></canvas>
+            <canvas id="wheel" width="800" height="800"></canvas>
             <div class="center-cap">Cafe</div>
           </div>
         </div>
@@ -126,7 +126,7 @@
 
   <div class="modal-backdrop" id="winnerModal">
     <div class="modal">
-      <h2>�Ganador!</h2>
+      <h2>Ganador!</h2>
       <div class="winner-name" id="winnerName">Nombre</div>
       <div class="subtext">Felicidades, disfruta tu premio de Cafe Santuario.</div>
       <button class="primary" id="closeModalBtn">Cerrar</button>
